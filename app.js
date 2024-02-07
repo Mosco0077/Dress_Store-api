@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const products = require('./routes/Products')
 
 const connectDb = require('./config/db')
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 // Middleware
 
