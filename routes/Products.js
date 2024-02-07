@@ -8,13 +8,23 @@ const {
      findProductByName, 
      createProduct,
      updateProduct, 
-     deleteProduct
-    } = require('../controllers/Products')
+     deleteProduct,
+     deleteAllProducts
+        } = require('../controllers/Products')
+const {
+    createCategory,
+    getAllCats
+} = require('../controllers/Categories')
 
 router.route('/')
     .get(getAllProducts)
     .post(createProduct)
+    .delete(deleteAllProducts)
     
+
+router.route('/category')
+    .get(getAllCats)
+    .post(createCategory)
 
 router.route('/:name')
     .get(findProductByName)

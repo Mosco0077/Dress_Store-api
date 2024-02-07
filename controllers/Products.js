@@ -1,5 +1,5 @@
 const Product = require('../models/Products')
-const Category = require('../models/Categories')
+
 
 const getAllProducts = async (req, res) => {
     
@@ -19,7 +19,9 @@ const getAllProducts = async (req, res) => {
      }else{
     try {
         const products = await Product.find({})
-
+        if(products < 1){
+           return res.status(404).json({msg : "No Product found"})
+        }
         return res.status(200).json({products})
 
     } catch (error) {
@@ -72,11 +74,53 @@ const findProductByName = async (req, res) => {
     //  res.end()
 }
 
-const updateProduct = (req, res) => {
-    res.send('Update Single Product Initiated')
+
+const deleteProduct = async (req, res) => {
+    try {
+        const {id:ProductId} = req.params
+        const product = await Product.findOneAndDelete({_id:ProductId})
+        if(!product){
+            res.status(404).json({msg: "Product not found"})
+        }
+        res.status(200).json({product, msg: "Product Deleted"})
+    } catch (error) {
+        res.status(500).json({msg: error})
+    }
+
 }
-const deleteProduct = (req, res) => {
-    res.send('Delete Single Product Initiated')
+
+const deleteAllProducts = async (req, res) => {
+    try {
+        
+        const products = await Product.deleteMany({})
+
+        if(!products){
+            res.status(404).json({msg: "Product not found"})
+        }
+        res.status(200).json({products, msg: "Product Deleted"})
+    } catch (error) {
+        res.status(500).json({msg: error})
+    }
+
+}
+const updateProduct = async (req, res) => {
+    try {
+        const {id:productId} = req.params
+
+        const product = await Product.findOneAndUpdate({_id:productId}, req.body,
+            {
+                new: true,
+                runValidators: true
+            })
+        
+        if(!product){
+            res.status(404).json({msg: "Product not found"})
+        }
+        res.status(200).json({product, msg: "Product Updated"})
+
+    } catch (error) {
+        res.status(500).json({msg: error})
+    }
 }
 
 module.exports = {
@@ -85,5 +129,6 @@ module.exports = {
     getProduct,
     findProductByName,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    deleteAllProducts
 }

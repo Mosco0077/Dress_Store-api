@@ -18,6 +18,8 @@ app.use(express.urlencoded({extended: false}))
 
 app.use('/api/products', products)
 
+// app.use('/api/category', category)
+
 app.use('/', (req, res) => {
     res.send(`Server Initiated on port ${port}`)
 });
